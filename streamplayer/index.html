@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Demo Live Stream Player</title>
+    <style>
+        #player {
+            border: solid 1px #ccc;
+        }
+    </style>
+
+    <script src="../dist//mux.js"></script>
+    <script src="../debug/js/FileSaver.js"></script>
+    <script type="text/javascript" src="StreamPlayer.js"></script>
+
+    <script>
+        var splayer = null;
+
+        function getParams( url ) {
+            var params = {};
+            var paramString = (url === undefined || url === null) ? window.location.search.substr(1) : url;
+            var paramArray = paramString.split('&');
+            for( var i = 0; i < paramArray.length; i ++ ){
+                var itemArray = paramArray[i].split('=');
+                var key = '';
+                var value = null;
+                if( itemArray.length > 0 ) key = decodeURIComponent(itemArray[0]);
+                if( itemArray.length > 1 ) value = decodeURIComponent(itemArray[1]);
+                if( !key ) continue;
+                params[key] = value;
+            }
+            return params;
+        };
+
+        var params = getParams();
+        var liveCtx = {
+            url: location.search.replace('?url=', '')
+        };
+
+        function doPlay() {
+            if( !splayer ) {
+            var url = document.getElementById('liveurl').value;
+                splayer = new StreamPlayer({
+                    el: 'player',
+                    url: url,
+                    codec: params.codec,
+                    ipats: parseInt(params.ipats) || 1,
+                    muted: params.muted == '1' || params.muted == 'true'
+                });
+            }
+            console.log('doPlay ...');
+            splayer.play();
+        }
+
+        function stopPlay() {
+            if( !splayer ) {
+                return;
+            }
+            splayer.stop();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('liveurl').value = liveCtx.url || 'ts.ts';
+        });
+    </script>
+</head>
+<body>
+    <div style="text-align:center;">
+        <div style="padding: 10px; font-weight: bold;"> Demo Live Stream Player </div>
+        <div>
+        	<video controls id="player" width="1000px" height="500px" style="background:#666;"></video>
+        </div>
+        <div style="padding:10px;">
+            <div style="padding-bottom: 10px;">URL: <input style="width: 650px; height:30px; font-size: 14px;" id="liveurl"></input></div>
+            <div>
+                <button onclick="doPlay()"> Play Now </button>
+                &nbsp;&nbsp;
+                <button onclick="stopPlay()"> Stop Play </button>
+            <div>
+        </div>
+    </div>
+</body>
+</html>
