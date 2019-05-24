@@ -258,7 +258,7 @@ StreamPlayer.prototype.saveTA = function(tarr, n) {
             type: 'application/octet-binary'
         });
         return window.saveAs(b, n);
-    } eles {
+    } else {
         console.log('Save failed.', n);
     }
 };
@@ -304,8 +304,11 @@ StreamPlayer.prototype._pumpReader = function() {
         if( !buffer ) {
             console.log('StreamPlayer: Reader stream end');
             if (!me.stats_.emptyStreamTimestamp) me.stats_.emptyStreamTimestamp = timestamp;
-            // me._endOfStream();
-            // return;
+            
+            if (me.config_.url.indexOf('http') !== 0) {
+                me._endOfStream();
+                return;
+            }
         } else {
             me.stats_.emptyStreamTimestamp = 0;
             // console.log(`Read:`, buffer.byteLength, ' bytes ...');
