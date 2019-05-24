@@ -9,7 +9,7 @@
         }
     </style>
 
-    <script src="../dist//mux.js"></script>
+    <script src="../dist/mux.js"></script>
     <script src="../debug/js/FileSaver.js"></script>
     <script type="text/javascript" src="StreamPlayer.js"></script>
 
@@ -45,7 +45,10 @@
                     url: url,
                     codec: params.codec,
                     ipats: parseInt(params.ipats) || 1,
-                    muted: params.muted == '1' || params.muted == 'true'
+                    muted: params.muted == '1' || params.muted == 'true',
+                    muxer: {
+                        defaultPmtPid: 66
+                    }
                 });
             }
             console.log('doPlay ...');
